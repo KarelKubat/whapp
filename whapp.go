@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/KarelKubat/flagnames"
 	"github.com/KarelKubat/whapp/logger"
@@ -20,11 +21,12 @@ import (
 )
 
 var (
-	logfileFlag = flag.String("logfile", "/tmp/whapp.log", "logfile to write")
-	verboseFlag = flag.Bool("verbose", false, "when true, debug messages are logged")
-	appendFlag  = flag.Bool("append", true, "when true (default), the logfile is appended")
-	reopenFlag  = flag.Bool("reopen", false, "when true, a new file is reopened when the logfile disappears (useful for log rotation)")
-	dbFlag      = flag.String("db", "store.db", "sqlite3 backend")
+	logfileFlag   = flag.String("logfile", "/tmp/whapp.log", "logfile to write")
+	verboseFlag   = flag.Bool("verbose", false, "when true, debug messages are logged")
+	appendFlag    = flag.Bool("append", true, "when true (default), the logfile is appended")
+	reopenFlag    = flag.Bool("reopen", false, "when true, a new file is reopened when the logfile disappears (useful for log rotation)")
+	dbFlag        = flag.String("db", "store.db", "sqlite3 backend")
+	quitAfterFlag = flag.Duration("quit-after", 0, "stop after the given duration (default: poll forever")
 )
 
 const (
@@ -88,11 +90,15 @@ func main() {
 		checkErr(err)
 	}
 
-	fmt.Println("Press ^C to stop.")
-	// Listen to Ctrl+C (you can also do something else that prevents the program from exiting)
-	c := make(chan os.Signal)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	<-c
+	if *quitAfterFlag == 0 {
+		fmt.Println("Press ^C to stop.")
+		c := make(chan os.Signal)
+		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+		<-c
+	} else {
+		fmt.Println("Press ^C to stop, or wait for", *quitAfterFlag)
+		time.Sleep(*quitAfterFlag)
+	}
 
 	client.Disconnect()
 }
