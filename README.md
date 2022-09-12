@@ -15,8 +15,7 @@ This is only needed upon the first invocation. The authentication credentials an
 
 ## What does it do
 
-Currently `whapp` doesn't do anything useful beyond listening to what happens and to print a message to `stdout` when one is received.
-
+Currently `whapp` doesn't do anything useful beyond listening to what happens and to print a message to `stdout` when one is received. It will listen forever, until you press `^C`.
 
 ## Links
 
