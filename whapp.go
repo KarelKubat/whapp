@@ -10,12 +10,12 @@ import (
 	"time"
 
 	"github.com/KarelKubat/flagnames"
+	"github.com/KarelKubat/whapp/handlers"
 	"github.com/KarelKubat/whapp/logger"
 	"github.com/mdp/qrterminal/v3"
 
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/store/sqlstore"
-	"go.mau.fi/whatsmeow/types/events"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -67,7 +67,7 @@ func main() {
 
 	// Instantiate client.
 	client := whatsmeow.NewClient(deviceStore, clientLogger)
-	client.AddEventHandler(eventHandler)
+	client.AddEventHandler(handlers.Dispatch)
 
 	// Authentication.
 	if client.Store.ID == nil {
@@ -107,17 +107,6 @@ func checkErr(err error) {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "FATAL: %v\n", err)
 		os.Exit(1)
-	}
-}
-
-func eventHandler(evt interface{}) {
-	switch v := evt.(type) {
-	case *events.Message:
-		if m := v.Message.GetConversation(); m != "" {
-			fmt.Println("Received a message:", v.Message.GetConversation())
-		} else {
-			fmt.Println("Received an empty message")
-		}
 	}
 }
 
