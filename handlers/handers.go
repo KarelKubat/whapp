@@ -17,10 +17,13 @@ import (
 	"github.com/KarelKubat/whapp/handlers/mediaretryerror"
 	"github.com/KarelKubat/whapp/handlers/message"
 	"github.com/KarelKubat/whapp/handlers/offlinesynccompleted"
+	"github.com/KarelKubat/whapp/handlers/pairerror"
 	"github.com/KarelKubat/whapp/handlers/pairsuccess"
 	"github.com/KarelKubat/whapp/handlers/picture"
+	"github.com/KarelKubat/whapp/handlers/pin"
 	"github.com/KarelKubat/whapp/handlers/presence"
 	"github.com/KarelKubat/whapp/handlers/privacysettings"
+	"github.com/KarelKubat/whapp/handlers/pushname"
 	"github.com/KarelKubat/whapp/handlers/qr"
 	"github.com/KarelKubat/whapp/handlers/receipt"
 	"github.com/KarelKubat/whapp/handlers/streamreplaced"
@@ -42,10 +45,10 @@ func Dispatch(evt interface{}) {
 		fmt.Println(chatpresence.New(v).String())
 	case *events.ClientOutdated:
 		fmt.Println(clientoutdated.New(v).String())
-	case *events.Contact:
-		fmt.Println(contact.New(v).String())
 	case *events.Connected:
 		fmt.Println(connected.New(v).String())
+	case *events.Contact:
+		fmt.Println(contact.New(v).String())
 	case *events.Disconnected:
 		fmt.Println(disconnected.New(v).String())
 	case *events.KeepAliveRestored:
@@ -60,14 +63,20 @@ func Dispatch(evt interface{}) {
 		fmt.Println(message.New(v).String())
 	case *events.OfflineSyncCompleted:
 		fmt.Println(offlinesynccompleted.New(v).String())
+	case *events.PairError:
+		fmt.Println(pairerror.New(v).String())
 	case *events.PairSuccess:
 		fmt.Println(pairsuccess.New(v).String())
 	case *events.Picture:
 		fmt.Println(picture.New(v).String())
-	case *events.PrivacySettings:
-		fmt.Println(privacysettings.New(v).String())
+	case *events.Pin:
+		fmt.Println(pin.New(v).String())
 	case *events.Presence:
 		fmt.Println(presence.New(v).String())
+	case *events.PrivacySettings:
+		fmt.Println(privacysettings.New(v).String())
+	case *events.PushName:
+		fmt.Println(pushname.New(v).String())
 	case *events.QR:
 		fmt.Println(qr.New(v).String())
 	case *events.Receipt:

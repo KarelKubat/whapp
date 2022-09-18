@@ -41,6 +41,22 @@ func BoolStringIfTrue(b bool) string {
 	return ""
 }
 
+func MessageInfoString(m *types.MessageInfo) string {
+	if m == nil {
+		return ""
+	}
+	s := ""
+	s = Setting(s, "ID", m.ID)
+	s = Setting(s, "Type", m.Type)
+	s = Setting(s, "PushName", m.PushName)
+	s = Setting(s, "TimeStamp", fmt.Sprintf("%v", m.Timestamp))
+	s = Setting(s, "Category", m.Category)
+	s = Setting(s, "Multicast", fmt.Sprintf("%v", m.Multicast))
+	s = Setting(s, "MediaType", m.MediaType)
+	s += " rest=omitted"
+	return s
+}
+
 // Protos (mainly in a Message type)
 func SenderKeyDistributionMessageString(s *proto.SenderKeyDistributionMessage) string {
 	if s == nil {
@@ -68,4 +84,25 @@ func LocationMessageString(l *proto.LocationMessage) string {
 		return ""
 	}
 	return fmt.Sprintf("Name=%v, rest=omitted", l.GetName())
+}
+
+func ExtendedTextMessageString(t *proto.ExtendedTextMessage) string {
+	if t == nil {
+		return ""
+	}
+	return fmt.Sprintf("Text=%v, Description=%v, Title=%v, rest=omitted", t.GetText(), t.GetDescription(), t.GetTitle())
+}
+
+func DocumentMessageString(d *proto.DocumentMessage) string {
+	if d == nil {
+		return ""
+	}
+	return fmt.Sprintf("Title=%v, FileLength=%v, FileName=%v, ContactVcard=%v, rest=omitted", d.GetTitle(), d.GetFileLength(), d.GetFileName(), d.GetContactVcard())
+}
+
+func AudioMessageString(a *proto.AudioMessage) string {
+	if a == nil {
+		return ""
+	}
+	return fmt.Sprintf("Url=%v, Mimetype=%v, FileLength=%v, Seconds=%v, rest=omitted", a.GetUrl(), a.GetMimetype(), a.GetFileLength(), a.GetSeconds())
 }

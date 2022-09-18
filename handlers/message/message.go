@@ -35,6 +35,9 @@ func (m *message) String() string {
 	s = tools.Setting(s, "ImageMessage", tools.ImageMessageString(m.ms.Message.GetImageMessage()))
 	s = tools.Setting(s, "ContactMessage", tools.ContactMessageString(m.ms.Message.GetContactMessage()))
 	s = tools.Setting(s, "LocationMessage", tools.LocationMessageString(m.ms.Message.GetLocationMessage()))
+	s = tools.Setting(s, "ExtendedTextMessage", tools.ExtendedTextMessageString(m.ms.Message.ExtendedTextMessage))
+	s = tools.Setting(s, "DocumentMessage", tools.DocumentMessageString(m.ms.Message.DocumentMessage))
+	s = tools.Setting(s, "AudioMessage", tools.AudioMessageString(m.ms.Message.AudioMessage))
 
 	if org == s {
 		s += "SUBMESSAGE NOT DECODED, ADAPT MESSAGE.GO"
