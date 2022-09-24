@@ -4,25 +4,25 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/KarelKubat/whapp/handlers"
 	"github.com/KarelKubat/whapp/tools"
 	"go.mau.fi/whatsmeow/types/events"
 )
 
-type receipt struct {
-	rec *events.Receipt
+type handler struct{}
+
+func init() {
+	handlers.Register(handlers.Receipt, &handler{})
 }
 
-func New(r *events.Receipt) *receipt {
-	return &receipt{
-		rec: r,
-	}
-}
-
-func (r *receipt) String() string {
+func (h *handler) Handle(ev interface{}) error {
+	r := ev.(*events.Receipt)
 	s := "Receipt:"
-	s = tools.Setting(s, "MessageSource", r.rec.MessageSource.SourceString())
-	s = tools.Setting(s, "MessageIDs", strings.Join(r.rec.MessageIDs, ","))
-	s = tools.Setting(s, "Timestamp", fmt.Sprintf("%v", r.rec.Timestamp))
-	s = tools.Setting(s, "Type", string(r.rec.Type))
-	return s
+	s = tools.Setting(s, "MessageSource", r.MessageSource.SourceString())
+	s = tools.Setting(s, "MessageIDs", strings.Join(r.MessageIDs, ","))
+	s = tools.Setting(s, "Timestamp", fmt.Sprintf("%v", r.Timestamp))
+	s = tools.Setting(s, "Type", string(r.Type))
+	fmt.Println(s)
+
+	return nil
 }

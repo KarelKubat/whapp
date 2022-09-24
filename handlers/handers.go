@@ -2,90 +2,248 @@ package handlers
 
 import (
 	"fmt"
-
-	"github.com/KarelKubat/whapp/handlers/appstate"
-	"github.com/KarelKubat/whapp/handlers/appstatesynccomplete"
-	"github.com/KarelKubat/whapp/handlers/archive"
-	"github.com/KarelKubat/whapp/handlers/chatpresence"
-	"github.com/KarelKubat/whapp/handlers/clientoutdated"
-	"github.com/KarelKubat/whapp/handlers/connected"
-	"github.com/KarelKubat/whapp/handlers/contact"
-	"github.com/KarelKubat/whapp/handlers/disconnected"
-	"github.com/KarelKubat/whapp/handlers/keepaliverestored"
-	"github.com/KarelKubat/whapp/handlers/keepalivetimeout"
-	"github.com/KarelKubat/whapp/handlers/loggedout"
-	"github.com/KarelKubat/whapp/handlers/mediaretryerror"
-	"github.com/KarelKubat/whapp/handlers/message"
-	"github.com/KarelKubat/whapp/handlers/offlinesynccompleted"
-	"github.com/KarelKubat/whapp/handlers/pairerror"
-	"github.com/KarelKubat/whapp/handlers/pairsuccess"
-	"github.com/KarelKubat/whapp/handlers/picture"
-	"github.com/KarelKubat/whapp/handlers/pin"
-	"github.com/KarelKubat/whapp/handlers/presence"
-	"github.com/KarelKubat/whapp/handlers/privacysettings"
-	"github.com/KarelKubat/whapp/handlers/pushname"
-	"github.com/KarelKubat/whapp/handlers/qr"
-	"github.com/KarelKubat/whapp/handlers/receipt"
-	"github.com/KarelKubat/whapp/handlers/streamreplaced"
-	"github.com/KarelKubat/whapp/handlers/temporaryban"
-	"github.com/KarelKubat/whapp/handlers/unknown"
+	"sync"
 
 	"go.mau.fi/whatsmeow/types/events"
 )
 
-func Dispatch(evt interface{}) {
+type Type int
+
+const (
+	firstUnused Type = iota // keep at first slot for tests
+
+	AppState
+	AppStateSyncComplete
+	Archive
+	BusinessName
+	CallAccept
+	CallOffer
+	CallOfferNotice
+	CallRelayLatency
+	CallTerminate
+	ChatPresence
+	ClientOutdated
+	Connected
+	ConnectFailure
+	Contact
+	DeleteChat
+	DeleteForMe
+	Disconnected
+	GroupInfo
+	HistorySync
+	IdentityChange
+	JoinedGroup
+	KeepAliveRestored
+	KeepAliveTimeout
+	LoggedOut
+	MarkChatAsRead
+	MediaRetry
+	Message
+	Mute
+	OfflineSyncCompleted
+	OfflineSyncPreview
+	PairError
+	PairSuccess
+	Picture
+	Pin
+	Presence
+	PrivacySettings
+	PushName
+	PushNameSetting
+	QR
+	QRScannedWithoutMultidevice
+	Receipt
+	Star
+	StreamError
+	StreamReplaced
+	TemporaryBan
+	UnarchiveChatSetting
+	UndecryptableMessage
+	UnknownCallEvent
+
+	lastUnused // keep at last slot for tests
+)
+
+func (t Type) String() string {
+	return []string{
+		"", // unused
+		"AppState",
+		"AppStateSyncComplete",
+		"Archive",
+		"BusinessName",
+		"CallAccept",
+		"CallOffer",
+		"CallOfferNotice",
+		"CallRelayLatency",
+		"CallTerminate",
+		"ChatPresence",
+		"ClientOutdated",
+		"Connected",
+		"ConnectFailure",
+		"Contact",
+		"DeleteChat",
+		"DeleteForMe",
+		"Disconnected",
+		"GroupInfo",
+		"HistorySync",
+		"IdentityChange",
+		"JoinedGroup",
+		"KeepAliveRestored",
+		"KeepAliveTimeout",
+		"LoggedOut",
+		"MarkChatAsRead",
+		"MediaRetry",
+		"Message",
+		"Mute",
+		"OfflineSyncCompleted",
+		"OfflineSyncPreview",
+		"PairError",
+		"PairSuccess",
+		"Picture",
+		"Pin",
+		"Presence",
+		"PrivacySettings",
+		"PushName",
+		"PushNameSetting",
+		"QR",
+		"QRScannedWithoutMultidevice",
+		"Receipt",
+		"Star",
+		"StreamError",
+		"StreamReplaced",
+		"TemporaryBan",
+		"UnarchiveChatSetting",
+		"UndecryptableMessage",
+		"UnknownCallEvent",
+	}[t]
+}
+
+type handler interface {
+	Handle(evt interface{}) error
+}
+
+var registry = make(map[Type][]handler)
+var registryMutex sync.Mutex
+
+func Register(t Type, h handler) {
+	registryMutex.Lock()
+	defer registryMutex.Unlock()
+
+	if _, ok := registry[t]; !ok {
+		registry[t] = []handler{}
+	}
+	registry[t] = append(registry[t], h)
+}
+
+func Dispatch(evt interface{}) error {
 	switch v := evt.(type) {
 	case *events.AppState:
-		fmt.Println(appstate.New(v).String())
+		return dispatch(AppState, v)
 	case *events.AppStateSyncComplete:
-		fmt.Println(appstatesynccomplete.New(v).String())
+		return dispatch(AppStateSyncComplete, v)
 	case *events.Archive:
-		fmt.Println(archive.New(v).String())
+		return dispatch(Archive, v)
+	case *events.BusinessName:
+		return dispatch(BusinessName, v)
+	case *events.CallAccept:
+		return dispatch(CallAccept, v)
+	case *events.CallOffer:
+		return dispatch(CallOffer, v)
+	case *events.CallOfferNotice:
+		return dispatch(CallOfferNotice, v)
+	case *events.CallRelayLatency:
+		return dispatch(CallRelayLatency, v)
+	case *events.CallTerminate:
+		return dispatch(CallTerminate, v)
 	case *events.ChatPresence:
-		fmt.Println(chatpresence.New(v).String())
+		return dispatch(ChatPresence, v)
 	case *events.ClientOutdated:
-		fmt.Println(clientoutdated.New(v).String())
+		return dispatch(ClientOutdated, v)
 	case *events.Connected:
-		fmt.Println(connected.New(v).String())
+		return dispatch(Connected, v)
+	case *events.ConnectFailure:
+		return dispatch(ConnectFailure, v)
 	case *events.Contact:
-		fmt.Println(contact.New(v).String())
+		return dispatch(Contact, v)
+	case *events.DeleteChat:
+		return dispatch(DeleteChat, v)
+	case *events.DeleteForMe:
+		return dispatch(DeleteForMe, v)
 	case *events.Disconnected:
-		fmt.Println(disconnected.New(v).String())
+		return dispatch(Disconnected, v)
+	case *events.GroupInfo:
+		return dispatch(GroupInfo, v)
+	case *events.HistorySync:
+		return dispatch(HistorySync, v)
+	case *events.JoinedGroup:
+		return dispatch(JoinedGroup, v)
+	case *events.IdentityChange:
+		return dispatch(IdentityChange, v)
 	case *events.KeepAliveRestored:
-		fmt.Println(keepaliverestored.New(v).String())
+		return dispatch(KeepAliveRestored, v)
 	case *events.KeepAliveTimeout:
-		fmt.Println(keepalivetimeout.New(v).String())
+		return dispatch(KeepAliveTimeout, v)
 	case *events.LoggedOut:
-		fmt.Println(loggedout.New(v).String())
-	case *events.MediaRetryError:
-		fmt.Println(mediaretryerror.New(v).String())
+		return dispatch(LoggedOut, v)
+	case *events.MarkChatAsRead:
+		return dispatch(MarkChatAsRead, v)
+	case *events.MediaRetry:
+		return dispatch(MediaRetry, v)
 	case *events.Message:
-		fmt.Println(message.New(v).String())
+		return dispatch(Message, v)
 	case *events.OfflineSyncCompleted:
-		fmt.Println(offlinesynccompleted.New(v).String())
+		return dispatch(OfflineSyncCompleted, v)
+	case *events.OfflineSyncPreview:
+		return dispatch(OfflineSyncPreview, v)
 	case *events.PairError:
-		fmt.Println(pairerror.New(v).String())
+		return dispatch(PairError, v)
 	case *events.PairSuccess:
-		fmt.Println(pairsuccess.New(v).String())
+		return dispatch(PairSuccess, v)
 	case *events.Picture:
-		fmt.Println(picture.New(v).String())
+		return dispatch(Picture, v)
 	case *events.Pin:
-		fmt.Println(pin.New(v).String())
+		return dispatch(Pin, v)
 	case *events.Presence:
-		fmt.Println(presence.New(v).String())
+		return dispatch(Presence, v)
 	case *events.PrivacySettings:
-		fmt.Println(privacysettings.New(v).String())
+		return dispatch(PrivacySettings, v)
 	case *events.PushName:
-		fmt.Println(pushname.New(v).String())
+		return dispatch(PushName, v)
+	case *events.PushNameSetting:
+		return dispatch(PushNameSetting, v)
 	case *events.QR:
-		fmt.Println(qr.New(v).String())
+		return dispatch(QR, v)
+	case *events.QRScannedWithoutMultidevice:
+		return dispatch(QRScannedWithoutMultidevice, v)
 	case *events.Receipt:
-		fmt.Println(receipt.New(v).String())
+		return dispatch(Receipt, v)
+	case *events.Star:
+		return dispatch(Star, v)
+	case *events.StreamError:
+		return dispatch(StreamError, v)
 	case *events.StreamReplaced:
-		fmt.Println(streamreplaced.New(v).String())
+		return dispatch(StreamReplaced, v)
 	case *events.TemporaryBan:
-		fmt.Println(temporaryban.New(v).String())
+		return dispatch(TemporaryBan, v)
+	case *events.UnarchiveChatsSetting:
+		return dispatch(UnarchiveChatSetting, v)
+	case *events.UndecryptableMessage:
+		return dispatch(UndecryptableMessage, v)
+	case *events.UnknownCallEvent:
+		return dispatch(UnknownCallEvent, v)
 	default:
-		fmt.Println(unknown.New(fmt.Sprintf("%+v", evt)))
+		return fmt.Errorf("unknown event %+v, can't dispatch", v)
 	}
+}
+
+func dispatch(t Type, ev interface{}) error {
+	if handlers, ok := registry[t]; ok {
+		for _, h := range handlers {
+			if err := h.Handle(ev); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+	return fmt.Errorf("%v: no handler for event %+v", t, ev)
 }

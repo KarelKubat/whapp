@@ -1,17 +1,18 @@
 package appstatesynccomplete
 
-import "go.mau.fi/whatsmeow/types/events"
+import (
+	"fmt"
 
-type appstatesynccomplete struct {
-	as *events.AppStateSyncComplete
+	"github.com/KarelKubat/whapp/handlers"
+)
+
+type handler struct{}
+
+func init() {
+	handlers.Register(handlers.AppStateSyncComplete, &handler{})
 }
 
-func New(a *events.AppStateSyncComplete) *appstatesynccomplete {
-	return &appstatesynccomplete{
-		as: a,
-	}
-}
-
-func (a *appstatesynccomplete) String() string {
-	return "AppStateSyncComplete: omitted"
+func (h *handler) Handle(ev interface{}) error {
+	fmt.Println("AppStateSyncComplete: [omitted]")
+	return nil
 }

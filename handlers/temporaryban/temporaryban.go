@@ -3,23 +3,23 @@ package temporaryban
 import (
 	"fmt"
 
+	"github.com/KarelKubat/whapp/handlers"
 	"github.com/KarelKubat/whapp/tools"
 	"go.mau.fi/whatsmeow/types/events"
 )
 
-type temporaryban struct {
-	tb *events.TemporaryBan
+type handler struct{}
+
+func init() {
+	handlers.Register(handlers.TemporaryBan, &handler{})
 }
 
-func New(t *events.TemporaryBan) *temporaryban {
-	return &temporaryban{
-		tb: t,
-	}
-}
-
-func (t *temporaryban) String() string {
+func (h *handler) Handle(ev interface{}) error {
+	t := ev.(*events.TemporaryBan)
 	s := "TemporaryBan:"
-	s = tools.Setting(s, "Code", t.tb.Code.String())
-	s = tools.Setting(s, "Expire", fmt.Sprintf("%v", t.tb.Expire))
-	return s
+	s = tools.Setting(s, "Code", t.Code.String())
+	s = tools.Setting(s, "Expire", fmt.Sprintf("%v", t.Expire))
+	fmt.Println(s)
+
+	return nil
 }

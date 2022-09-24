@@ -2,46 +2,48 @@
 package message
 
 import (
+	"fmt"
+
+	"github.com/KarelKubat/whapp/handlers"
 	"github.com/KarelKubat/whapp/tools"
 	"go.mau.fi/whatsmeow/types/events"
 )
 
-type message struct {
-	ms *events.Message
+type handler struct{}
+
+func init() {
+	handlers.Register(handlers.Message, &handler{})
 }
 
-func New(m *events.Message) *message {
-	return &message{
-		ms: m,
-	}
-}
-
-func (m *message) String() string {
+func (h *handler) Handle(ev interface{}) error {
+	m := ev.(*events.Message)
 	s := "Message:"
 
-	s = tools.Setting(s, "ID", m.ms.Info.ID)
-	s = tools.Setting(s, "Type", m.ms.Info.Type)
-	s = tools.Setting(s, "PushName", m.ms.Info.PushName)
-	s = tools.Setting(s, "Category", m.ms.Info.Category)
-	s = tools.Setting(s, "Multicast", tools.BoolStringIfTrue(m.ms.Info.Multicast))
-	s = tools.Setting(s, "MediaType", m.ms.Info.MediaType)
+	s = tools.Setting(s, "ID", m.Info.ID)
+	s = tools.Setting(s, "Type", m.Info.Type)
+	s = tools.Setting(s, "PushName", m.Info.PushName)
+	s = tools.Setting(s, "Category", m.Info.Category)
+	s = tools.Setting(s, "Multicast", tools.BoolStringIfTrue(m.Info.Multicast))
+	s = tools.Setting(s, "MediaType", m.Info.MediaType)
 	// VerifiedName and DeviceSentData are not rendered
 
-	s = tools.Setting(s, "Conversation", m.ms.Message.GetConversation())
+	s = tools.Setting(s, "Conversation", m.Message.GetConversation())
 
 	org := s
 
-	s = tools.Setting(s, "SenderKeyDistributionMessage", tools.SenderKeyDistributionMessageString(m.ms.Message.GetSenderKeyDistributionMessage()))
-	s = tools.Setting(s, "ImageMessage", tools.ImageMessageString(m.ms.Message.GetImageMessage()))
-	s = tools.Setting(s, "ContactMessage", tools.ContactMessageString(m.ms.Message.GetContactMessage()))
-	s = tools.Setting(s, "LocationMessage", tools.LocationMessageString(m.ms.Message.GetLocationMessage()))
-	s = tools.Setting(s, "ExtendedTextMessage", tools.ExtendedTextMessageString(m.ms.Message.ExtendedTextMessage))
-	s = tools.Setting(s, "DocumentMessage", tools.DocumentMessageString(m.ms.Message.DocumentMessage))
-	s = tools.Setting(s, "AudioMessage", tools.AudioMessageString(m.ms.Message.AudioMessage))
+	s = tools.Setting(s, "SenderKeyDistributionMessage", tools.SenderKeyDistributionMessageString(m.Message.GetSenderKeyDistributionMessage()))
+	s = tools.Setting(s, "ImageMessage", tools.ImageMessageString(m.Message.GetImageMessage()))
+	s = tools.Setting(s, "ContactMessage", tools.ContactMessageString(m.Message.GetContactMessage()))
+	s = tools.Setting(s, "LocationMessage", tools.LocationMessageString(m.Message.GetLocationMessage()))
+	s = tools.Setting(s, "ExtendedTextMessage", tools.ExtendedTextMessageString(m.Message.ExtendedTextMessage))
+	s = tools.Setting(s, "DocumentMessage", tools.DocumentMessageString(m.Message.DocumentMessage))
+	s = tools.Setting(s, "AudioMessage", tools.AudioMessageString(m.Message.AudioMessage))
 
 	if org == s {
-		s += "SUBMESSAGE NOT DECODED, ADAPT MESSAGE.GO"
+		s += "SUBMESSAGE NOT DECODED, FIX hanlders/message/message.go"
 	}
 
-	return s
+	fmt.Println(s)
+
+	return nil
 }

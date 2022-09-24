@@ -1,13 +1,18 @@
 package keepaliverestored
 
-import "go.mau.fi/whatsmeow/types/events"
+import (
+	"fmt"
 
-type keepaliverestored struct{}
+	"github.com/KarelKubat/whapp/handlers"
+)
 
-func New(_ *events.KeepAliveRestored) *keepaliverestored {
-	return &keepaliverestored{}
+type handler struct{}
+
+func init() {
+	handlers.Register(handlers.KeepAliveRestored, &handler{})
 }
 
-func (k *keepaliverestored) String() string {
-	return "KeepAliveRestored"
+func (h *handler) Handle(ev interface{}) error {
+	fmt.Println("KeepAliveRestored")
+	return nil
 }

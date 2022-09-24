@@ -1,17 +1,18 @@
 package appstate
 
-import "go.mau.fi/whatsmeow/types/events"
+import (
+	"fmt"
 
-type appstate struct {
-	as *events.AppState
+	"github.com/KarelKubat/whapp/handlers"
+)
+
+type handler struct{}
+
+func init() {
+	handlers.Register(handlers.AppState, &handler{})
 }
 
-func New(a *events.AppState) *appstate {
-	return &appstate{
-		as: a,
-	}
-}
-
-func (a *appstate) String() string {
-	return "AppState: omitted"
+func (h *handler) Handle(ev interface{}) error {
+	fmt.Println("AppState: [omitted]")
+	return nil
 }

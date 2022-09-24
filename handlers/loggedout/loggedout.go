@@ -3,23 +3,23 @@ package loggedout
 import (
 	"fmt"
 
+	"github.com/KarelKubat/whapp/handlers"
 	"github.com/KarelKubat/whapp/tools"
 	"go.mau.fi/whatsmeow/types/events"
 )
 
-type loggedout struct {
-	lo *events.LoggedOut
+type handler struct{}
+
+func init() {
+	handlers.Register(handlers.LoggedOut, &handler{})
 }
 
-func New(l *events.LoggedOut) *loggedout {
-	return &loggedout{
-		lo: l,
-	}
-}
-
-func (l *loggedout) String() string {
+func (h *handler) Handle(ev interface{}) error {
+	l := ev.(*events.LoggedOut)
 	s := "LoggedOut:"
-	s = tools.Setting(s, "OnConnect", fmt.Sprintf("%v", l.lo.OnConnect))
-	s = tools.Setting(s, "Reason", fmt.Sprintf("%v", l.lo.Reason))
-	return s
+	s = tools.Setting(s, "OnConnect", fmt.Sprintf("%v", l.OnConnect))
+	s = tools.Setting(s, "Reason", fmt.Sprintf("%v", l.Reason))
+	fmt.Println(s)
+
+	return nil
 }

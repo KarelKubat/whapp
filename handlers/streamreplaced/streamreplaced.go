@@ -1,13 +1,18 @@
 package streamreplaced
 
-import "go.mau.fi/whatsmeow/types/events"
+import (
+	"fmt"
 
-type streamreplaced struct{}
+	"github.com/KarelKubat/whapp/handlers"
+)
 
-func New(s *events.StreamReplaced) *streamreplaced {
-	return &streamreplaced{}
+type handler struct{}
+
+func init() {
+	handlers.Register(handlers.StreamReplaced, &handler{})
 }
 
-func (s *streamreplaced) String() string {
-	return "StreamReplaced"
+func (h *handler) Handle(ev interface{}) error {
+	fmt.Println("StreamReplaced")
+	return nil
 }

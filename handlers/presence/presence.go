@@ -3,24 +3,24 @@ package presence
 import (
 	"fmt"
 
+	"github.com/KarelKubat/whapp/handlers"
 	"github.com/KarelKubat/whapp/tools"
 	"go.mau.fi/whatsmeow/types/events"
 )
 
-type presence struct {
-	pr *events.Presence
+type handler struct{}
+
+func init() {
+	handlers.Register(handlers.Presence, &handler{})
 }
 
-func New(p *events.Presence) *presence {
-	return &presence{
-		pr: p,
-	}
-}
-
-func (p *presence) String() string {
+func (h *handler) Handle(ev interface{}) error {
+	p := ev.(*events.Presence)
 	s := "Presence:"
-	s = tools.Setting(s, "From", tools.JIDString(&p.pr.From))
-	s = tools.Setting(s, "Unavailable", fmt.Sprintf("%v", p.pr.Unavailable))
-	s = tools.Setting(s, "LastSeen", fmt.Sprintf("%v", p.pr.LastSeen))
-	return s
+	s = tools.Setting(s, "From", tools.JIDString(&p.From))
+	s = tools.Setting(s, "Unavailable", fmt.Sprintf("%v", p.Unavailable))
+	s = tools.Setting(s, "LastSeen", fmt.Sprintf("%v", p.LastSeen))
+	fmt.Println(s)
+
+	return nil
 }

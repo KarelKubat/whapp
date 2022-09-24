@@ -18,6 +18,31 @@ import (
 	"go.mau.fi/whatsmeow/store/sqlstore"
 
 	_ "github.com/mattn/go-sqlite3"
+
+	_ "github.com/KarelKubat/whapp/handlers/appstate"
+	_ "github.com/KarelKubat/whapp/handlers/appstatesynccomplete"
+	_ "github.com/KarelKubat/whapp/handlers/archive"
+	_ "github.com/KarelKubat/whapp/handlers/chatpresence"
+	_ "github.com/KarelKubat/whapp/handlers/clientoutdated"
+	_ "github.com/KarelKubat/whapp/handlers/connected"
+	_ "github.com/KarelKubat/whapp/handlers/contact"
+	_ "github.com/KarelKubat/whapp/handlers/disconnected"
+	_ "github.com/KarelKubat/whapp/handlers/keepaliverestored"
+	_ "github.com/KarelKubat/whapp/handlers/keepalivetimeout"
+	_ "github.com/KarelKubat/whapp/handlers/loggedout"
+	_ "github.com/KarelKubat/whapp/handlers/message"
+	_ "github.com/KarelKubat/whapp/handlers/offlinesynccompleted"
+	_ "github.com/KarelKubat/whapp/handlers/pairerror"
+	_ "github.com/KarelKubat/whapp/handlers/pairsuccess"
+	_ "github.com/KarelKubat/whapp/handlers/picture"
+	_ "github.com/KarelKubat/whapp/handlers/pin"
+	_ "github.com/KarelKubat/whapp/handlers/presence"
+	_ "github.com/KarelKubat/whapp/handlers/privacysettings"
+	_ "github.com/KarelKubat/whapp/handlers/pushname"
+	_ "github.com/KarelKubat/whapp/handlers/qr"
+	_ "github.com/KarelKubat/whapp/handlers/receipt"
+	_ "github.com/KarelKubat/whapp/handlers/streamreplaced"
+	_ "github.com/KarelKubat/whapp/handlers/temporaryban"
 )
 
 var (
@@ -67,7 +92,11 @@ func main() {
 
 	// Instantiate client.
 	client := whatsmeow.NewClient(deviceStore, clientLogger)
-	client.AddEventHandler(handlers.Dispatch)
+	client.AddEventHandler(func(e interface{}) {
+		if err := handlers.Dispatch(e); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+		}
+	})
 
 	// Authentication.
 	if client.Store.ID == nil {

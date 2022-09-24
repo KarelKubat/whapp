@@ -1,13 +1,18 @@
 package clientoutdated
 
-import "go.mau.fi/whatsmeow/types/events"
+import (
+	"fmt"
 
-type clientoutdated struct{}
+	"github.com/KarelKubat/whapp/handlers"
+)
 
-func New(c *events.ClientOutdated) *clientoutdated {
-	return &clientoutdated{}
+type handler struct{}
+
+func init() {
+	handlers.Register(handlers.ClientOutdated, &handler{})
 }
 
-func (c *clientoutdated) String() string {
-	return "ClientOutdated"
+func (h *handler) Handle(ev interface{}) error {
+	fmt.Println("ClientOutdated")
+	return nil
 }

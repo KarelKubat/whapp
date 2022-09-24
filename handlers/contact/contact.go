@@ -3,24 +3,24 @@ package contact
 import (
 	"fmt"
 
+	"github.com/KarelKubat/whapp/handlers"
 	"github.com/KarelKubat/whapp/tools"
 	"go.mau.fi/whatsmeow/types/events"
 )
 
-type contact struct {
-	cn *events.Contact
+type handler struct{}
+
+func init() {
+	handlers.Register(handlers.Contact, &handler{})
 }
 
-func New(c *events.Contact) *contact {
-	return &contact{
-		cn: c,
-	}
-}
-
-func (c *contact) String() string {
+func (h *handler) Handle(ev interface{}) error {
+	c := ev.(*events.Contact)
 	s := "Contact:"
-	s = tools.Setting(s, "JID", tools.JIDString(&c.cn.JID))
-	s = tools.Setting(s, "Timestamp", fmt.Sprintf("%v", c.cn.Timestamp))
-	s = tools.Setting(s, "Action", fmt.Sprintf("first:%v, full:%v", c.cn.Action.GetFirstName(), c.cn.Action.GetFullName()))
-	return s
+	s = tools.Setting(s, "JID", tools.JIDString(&c.JID))
+	s = tools.Setting(s, "Timestamp", fmt.Sprintf("%v", c.Timestamp))
+	s = tools.Setting(s, "Action", fmt.Sprintf("first:%v, full:%v", c.Action.GetFirstName(), c.Action.GetFullName()))
+	fmt.Println(s)
+
+	return nil
 }

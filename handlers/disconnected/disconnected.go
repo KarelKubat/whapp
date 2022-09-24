@@ -1,13 +1,18 @@
 package disconnected
 
-import "go.mau.fi/whatsmeow/types/events"
+import (
+	"fmt"
 
-type disconnected struct{}
+	"github.com/KarelKubat/whapp/handlers"
+)
 
-func New(c *events.Disconnected) *disconnected {
-	return &disconnected{}
+type handler struct{}
+
+func init() {
+	handlers.Register(handlers.Disconnected, &handler{})
 }
 
-func (c *disconnected) String() string {
-	return "Disconnected"
+func (h *handler) Handle(ev interface{}) error {
+	fmt.Println("Disonnected")
+	return nil
 }

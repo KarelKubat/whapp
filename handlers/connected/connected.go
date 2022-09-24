@@ -1,13 +1,18 @@
 package connected
 
-import "go.mau.fi/whatsmeow/types/events"
+import (
+	"fmt"
 
-type connected struct{}
+	"github.com/KarelKubat/whapp/handlers"
+)
 
-func New(c *events.Connected) *connected {
-	return &connected{}
+type handler struct{}
+
+func init() {
+	handlers.Register(handlers.Connected, &handler{})
 }
 
-func (c *connected) String() string {
-	return "Connected"
+func (h *handler) Handle(ev interface{}) error {
+	fmt.Println("Connected")
+	return nil
 }

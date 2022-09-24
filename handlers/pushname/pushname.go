@@ -1,25 +1,27 @@
 package pushname
 
 import (
+	"fmt"
+
+	"github.com/KarelKubat/whapp/handlers"
 	"github.com/KarelKubat/whapp/tools"
 	"go.mau.fi/whatsmeow/types/events"
 )
 
-type pushname struct {
-	pn *events.PushName
+type handler struct{}
+
+func init() {
+	handlers.Register(handlers.PushName, &handler{})
 }
 
-func New(p *events.PushName) *pushname {
-	return &pushname{
-		pn: p,
-	}
-}
-
-func (p *pushname) String() string {
+func (h *handler) Handle(ev interface{}) error {
+	p := ev.(*events.PushName)
 	s := "PushName:"
-	s = tools.Setting(s, "JID", tools.JIDString(&p.pn.JID))
-	s = tools.Setting(s, "MessageInfo", tools.MessageInfoString(p.pn.Message))
-	s = tools.Setting(s, "OldPushName", p.pn.OldPushName)
-	s = tools.Setting(s, "NewPushName", p.pn.NewPushName)
-	return s
+	s = tools.Setting(s, "JID", tools.JIDString(&p.JID))
+	s = tools.Setting(s, "MessageInfo", tools.MessageInfoString(p.Message))
+	s = tools.Setting(s, "OldPushName", p.OldPushName)
+	s = tools.Setting(s, "NewPushName", p.NewPushName)
+	fmt.Println(s)
+
+	return nil
 }

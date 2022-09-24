@@ -1,24 +1,26 @@
 package pairsuccess
 
 import (
+	"fmt"
+
+	"github.com/KarelKubat/whapp/handlers"
 	"github.com/KarelKubat/whapp/tools"
 	"go.mau.fi/whatsmeow/types/events"
 )
 
-type pairsuccess struct {
-	ps *events.PairSuccess
+type handler struct{}
+
+func init() {
+	handlers.Register(handlers.PairSuccess, &handler{})
 }
 
-func New(p *events.PairSuccess) *pairsuccess {
-	return &pairsuccess{
-		ps: p,
-	}
-}
-
-func (p *pairsuccess) String() string {
+func (h *handler) Handle(ev interface{}) error {
+	p := ev.(*events.PairSuccess)
 	s := "PairSuccess:"
-	s = tools.Setting(s, "ID", tools.JIDString(&p.ps.ID))
-	s = tools.Setting(s, "BusinessName", p.ps.BusinessName)
-	s = tools.Setting(s, "Platform", p.ps.Platform)
-	return s
+	s = tools.Setting(s, "ID", tools.JIDString(&p.ID))
+	s = tools.Setting(s, "BusinessName", p.BusinessName)
+	s = tools.Setting(s, "Platform", p.Platform)
+	fmt.Println(s)
+
+	return nil
 }
