@@ -11,7 +11,7 @@ import (
 type handler struct{}
 
 func init() {
-	handlers.Register(handlers.Message, &handler{})
+	handlers.Register(handlers.Archive, &handler{})
 }
 
 func (h *handler) Handle(ev interface{}) error {
