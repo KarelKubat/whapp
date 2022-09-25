@@ -3,15 +3,15 @@ package offlinesynccompleted
 import (
 	"fmt"
 
-	"github.com/KarelKubat/whatsmeow/handlers"
 	"github.com/KarelKubat/whapp/tools"
+	"github.com/KarelKubat/whatsmeow/handlers"
 	"go.mau.fi/whatsmeow/types/events"
 )
 
 type handler struct{}
 
 func init() {
-	handlers.Register(handlers.Message, &handler{})
+	handlers.Register(handlers.OfflineSyncCompleted, &handler{})
 }
 
 func (h *handler) Handle(ev interface{}) error {
