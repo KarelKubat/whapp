@@ -10,13 +10,12 @@ import (
 	"time"
 
 	"github.com/KarelKubat/flagnames"
-	"github.com/KarelKubat/whapp/logger"
+	"github.com/KarelKubat/whatsmeow/handlers"
+	"github.com/KarelKubat/whatsmeow/logger"
 	"github.com/mdp/qrterminal/v3"
 
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/store/sqlstore"
-
-	"github.com/KarelKubat/whatsmeow/handlers"
 
 	_ "github.com/mattn/go-sqlite3"
 
@@ -50,7 +49,6 @@ var (
 	logfileFlag   = flag.String("logfile", "/tmp/whapp.log", "logfile to write")
 	verboseFlag   = flag.Bool("verbose", false, "when true, debug messages are logged")
 	appendFlag    = flag.Bool("append", true, "when true (default), the logfile is appended")
-	reopenFlag    = flag.Bool("reopen", false, "when true, a new file is reopened when the logfile disappears (useful for log rotation)")
 	dbFlag        = flag.String("db", "store.db", "sqlite3 backend")
 	quitAfterFlag = flag.Duration("quit-after", 0, "stop after the given duration (default: poll forever")
 )
@@ -78,21 +76,20 @@ func main() {
 		Filename: *logfileFlag,
 		Verbose:  *verboseFlag,
 		Append:   *appendFlag,
-		Reopen:   *reopenFlag,
 	})
 	checkErr(err)
 	dbLogger := baseLogger.Sub("Database")
-	clientLogger := baseLogger.Sub("Client")
+	clLogger := baseLogger.Sub("Client")
 
 	// Instantiate storage.
 	container, err := sqlstore.New("sqlite3", fmt.Sprintf("file:%s?_foreign_keys=on", *dbFlag), dbLogger)
 	checkErr(err)
 	// If you want multiple sessions, remember their JIDs and use .GetDevice(jid) or .GetAllDevices() instead.
-	deviceStore, err := container.GetFirstDevice()
+	store, err := container.GetFirstDevice()
 	checkErr(err)
 
 	// Instantiate client.
-	client := whatsmeow.NewClient(deviceStore, clientLogger)
+	client := whatsmeow.NewClient(store, clLogger)
 	client.AddEventHandler(func(e interface{}) {
 		if err := handlers.Dispatch(e); err != nil {
 			fmt.Fprintln(os.Stderr, err)
