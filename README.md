@@ -19,4 +19,6 @@ Currently `whapp` doesn't do anything useful beyond listening to what happens an
 
 ## Links
 
-Under the hood `whapp` uses the WhatsApp client [whatsmeow](http://go.mau.fi/whatsmeow). Very neat and nice implementation, so respect where it's due.
+Under the hood `whapp` uses the stock WhatsApp client [whatsmeow](http://go.mau.fi/whatsmeow). Very neat and nice implementation, so respect where it's due.
+
+I've externalized some tooling that I think may be handy into https://github.com/KarelKubat/whatsmeow (events and logging), hoping it's useful to you.
