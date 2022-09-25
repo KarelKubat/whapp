@@ -3,7 +3,7 @@ package connected
 import (
 	"fmt"
 
-	"github.com/KarelKubat/whapp/handlers"
+	"github.com/KarelKubat/whatsmeow/handlers"
 )
 
 type handler struct{}

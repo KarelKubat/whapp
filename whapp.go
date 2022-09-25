@@ -10,12 +10,13 @@ import (
 	"time"
 
 	"github.com/KarelKubat/flagnames"
-	"github.com/KarelKubat/whapp/handlers"
 	"github.com/KarelKubat/whapp/logger"
 	"github.com/mdp/qrterminal/v3"
 
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/store/sqlstore"
+
+	"github.com/KarelKubat/whatsmeow/handlers"
 
 	_ "github.com/mattn/go-sqlite3"
 

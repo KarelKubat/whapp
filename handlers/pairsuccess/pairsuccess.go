@@ -3,7 +3,7 @@ package pairsuccess
 import (
 	"fmt"
 
-	"github.com/KarelKubat/whapp/handlers"
+	"github.com/KarelKubat/whatsmeow/handlers"
 	"github.com/KarelKubat/whapp/tools"
 	"go.mau.fi/whatsmeow/types/events"
 )
