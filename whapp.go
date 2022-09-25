@@ -96,7 +96,17 @@ func main() {
 	client := whatsmeow.NewClient(store, clLogger)
 	client.AddEventHandler(func(e interface{}) {
 		if err := handlers.Dispatch(e); err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			switch err.Type {
+			case handlers.NoHandlerFound:
+				// This program tries to cover all events.
+				fmt.Println(err)
+			case handlers.HandlerFailed:
+				// Handler has failed.
+				fmt.Println(err)
+				// Dispatcher has a bug or lags in known events.
+			case handlers.UnknownEvent:
+				panic(err)
+			}
 		}
 	})
 
