@@ -1,6 +1,6 @@
 # whapp
 
-This is a WhatsApp robot proof of concept. You can look at this code if you like, but it won't do that much for you. It's a long way from being generally useful.
+This is a WhatsApp robot proof of concept. You can look at this code if you like, but it won't do that much for you. It's a long way from being pulled from GIT and being a Generally Useful Distribution (git-gud).
 
 ## How to run it
 
