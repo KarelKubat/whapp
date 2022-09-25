@@ -26,12 +26,15 @@ import (
 	_ "github.com/KarelKubat/whapp/handlers/clientoutdated"
 	_ "github.com/KarelKubat/whapp/handlers/connected"
 	_ "github.com/KarelKubat/whapp/handlers/contact"
+	_ "github.com/KarelKubat/whapp/handlers/deletechat"
 	_ "github.com/KarelKubat/whapp/handlers/disconnected"
+	_ "github.com/KarelKubat/whapp/handlers/identitychange"
 	_ "github.com/KarelKubat/whapp/handlers/keepaliverestored"
 	_ "github.com/KarelKubat/whapp/handlers/keepalivetimeout"
 	_ "github.com/KarelKubat/whapp/handlers/loggedout"
 	_ "github.com/KarelKubat/whapp/handlers/message"
 	_ "github.com/KarelKubat/whapp/handlers/offlinesynccompleted"
+	_ "github.com/KarelKubat/whapp/handlers/offlinesyncpreview"
 	_ "github.com/KarelKubat/whapp/handlers/pairerror"
 	_ "github.com/KarelKubat/whapp/handlers/pairsuccess"
 	_ "github.com/KarelKubat/whapp/handlers/picture"
@@ -43,6 +46,7 @@ import (
 	_ "github.com/KarelKubat/whapp/handlers/receipt"
 	_ "github.com/KarelKubat/whapp/handlers/streamreplaced"
 	_ "github.com/KarelKubat/whapp/handlers/temporaryban"
+	_ "github.com/KarelKubat/whapp/handlers/undecryptablemessage"
 )
 
 var (
