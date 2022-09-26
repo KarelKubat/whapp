@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/KarelKubat/flagnames v0.0.0-20220529100742-dc3c04ee5f17
-	github.com/KarelKubat/whatsmeow v0.0.0-20220925122659-b96bfe50fc6a
+	github.com/KarelKubat/whatsmeow v0.0.0-20220925170722-b109d9aab993
 	github.com/mattn/go-sqlite3 v1.14.15
 	github.com/mdp/qrterminal/v3 v3.0.0
 	go.mau.fi/whatsmeow v0.0.0-20220912085258-5c8577b8ac6f
