@@ -39,8 +39,7 @@ func main() {
 	checkErr(wm.InitStore())
 
 	// Run the action of arg[1]
-	action.Run(flag.Args())
-
+	checkErr(action.Run(flag.Args()))
 }
 
 func checkErr(err error) {
@@ -54,6 +53,7 @@ func usage() {
 	fmt.Fprintf(os.Stderr, usageInfo, action.Usage())
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stdout)
+	os.Exit(1)
 }
 
 func parseCommandLine() {

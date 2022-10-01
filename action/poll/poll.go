@@ -53,7 +53,7 @@ func (p *poll) Description() *action.Info {
 	return &action.Info{
 		Name:  "poll",
 		NArgs: 0,
-		Usage: "poll (continuously listen until -quit-after runs out or ^C is pressed)",
+		Usage: "poll (continuously listen and show events on stdout until -quit-after runs out or ^C is pressed)",
 	}
 }
 

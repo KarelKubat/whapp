@@ -32,7 +32,7 @@ func Register(a Action) {
 func Usage() string {
 	desc := []string{}
 	for _, a := range registry {
-		desc = append(desc, a.Description().Usage)
+		desc = append(desc, "  "+a.Description().Usage)
 	}
 	sort.Strings(desc)
 	return strings.Join(desc, "\n")
